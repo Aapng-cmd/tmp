@@ -1,0 +1,61 @@
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Filter Baskets</h1>
+        <form id="filter-form">
+            <div class="form-group">
+                <label for="filter_by">Filter By:</label>
+                <select id="filter_by" name="field" required>
+                    <option value="">Select Field</option>
+                    <option value="name">Name</option>
+                    <option value="description">Description</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="value">Value:</label>
+                <input type="text" id="value" name="value" placeholder="Enter value" required>
+            </div>
+            <button type="submit">Apply Filter</button>
+        </form>
+        {% if error %}
+            <h3>{{error}}</h3>
+            {% endif %}
+        <div class="basket-list">
+            {% if baskets %}
+            {% if field %}
+                <h3>Result for {{field}} = {{value}}</h3>
+                {% endif %}
+            <ul>
+                {% for basket in baskets %}
+                    <li>
+                        <h2>{{ basket.name }}</h2>
+                        <p id="description"><strong>Description:</strong> <b>{{ basket.description }}</b></p>
+                        <p id = "price"><strong>Price:</strong><b> ${{ basket.cost }}</b></p>
+                        {% if basket.sent_to != 'default' %}
+                        <p><strong>Sended to:</strong> <b>{{ basket.sent_to}}</b></p>
+                        
+                        <!-- Add more details if needed -->
+                        {% else %}
+                        <div class="container">
+                            <h3>Send this basket to another user</h3>
+                        <form id="basket-send-form" action="send" method="POST">
+                            <div class="form-group">
+                            <input type="hidden" name="basket_id" value="{{basket.id}}">
+                            <label for="user_to">User to:</label>
+                            <input type="text" name="user_to" placeholder="Enter a username" required>
+                            <button type="submit">Send</button>
+                            </div>
+                        </form>   
+                        </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% elif field %}
+            <h3>You don't have baskets with {{field}}={{value}}</h3>
+            {% else %}
+            <h3>You don't have baskets yet </h3><a href="{{url_for('basket routes.create_basket')}}">Create one</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

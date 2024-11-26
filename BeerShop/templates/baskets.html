@@ -1,0 +1,42 @@
+{% include 'header.html' %}
+    <div class="container">
+        <h1>Given Baskets List</h1>
+        <form id="filter-form">
+            <div class="form-group">
+                <label for="owner">Given From:</label>
+                <input type="text" id="user_from" name="user_from" placeholder="Enter username" required>
+                <input type="hidden" id="user_to" name="user_to" value="">
+            </div>
+            <button type="submit">Apply Filter</button>
+        </form>
+        <div class="basket-list">
+            {% if baskets %}
+            <ul>
+                {% for basket in baskets %}
+                    
+                        <h2>{{ basket.name }}</h2>
+                        <p><strong>Description:</strong> {{ basket.description }}</p>
+                        <p><strong>Price:</strong>  ${{ basket.cost }}</p>
+                        <p><strong>From:</strong> {{basket.owner}}</p>
+                        
+                        <div class="beer-info">
+                            <p><strong>Beers:</strong></p>
+                            <ul>
+                                {% for beer in basket.beers %}
+                                    <li>
+                                        <p><strong>Beer name:</strong> {{ beer.name }}</p>
+                                        <p><strong>Beer color:</strong> {{ beer.color }}</p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Sorry, you don`t have given baskets</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

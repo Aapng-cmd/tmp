@@ -1,0 +1,14 @@
+services:
+  beershop:
+    build: .
+    restart: unless-stopped
+    pids_limit: 256
+    mem_limit: 512M
+    cpus: 0.5
+    ports:
+      - 5164:5000
+    volumes:
+      - ./data:/data
+    environment:
+      - DB=/data/baskets.db
+      - SECRET=/data/secret

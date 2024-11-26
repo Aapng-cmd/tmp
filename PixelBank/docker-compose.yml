@@ -1,0 +1,28 @@
+version: '2.4'
+services:
+  pixelbank:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    ports:
+      - "4369:4369"
+
+  postgres:
+    image: postgres:13.2-alpine
+    restart: always
+    mem_limit: 1G
+    memswap_limit: 1G
+    pids_limit: 100
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=pixelbank
+      - POSTGRES_USER=pixelbank
+      - POSTGRES_DB=pixelbank
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "pixelbank"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
