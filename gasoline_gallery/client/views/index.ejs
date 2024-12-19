@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Gasoline Gallery</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <h1>Gasoline Gallery</h1>
+      </header>
+      <h2 class="profile-name"><%= user.username %>`s posts</h2>
+      <a href="/create-post">Create post</a>
+      <a href="/users">Explore other users</a>
+      <a href="/logout">Logout</a>
+      <div class="gallery">
+        <% posts.forEach(post => { %>
+        <div class="gallery-item">
+          <a href="/posts/<%= post.id %>">
+            <img
+              width="300"
+              height="300"
+              src="/uploads/<%= post.filename %>.jpg"
+              alt="Image is private or does not exist"
+            />
+          </a>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>

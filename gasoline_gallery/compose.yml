@@ -1,0 +1,38 @@
+services:
+  gasoline-client:
+    container_name: gasoline-client
+    build: ./client
+    ports:
+      - "4000:3000"
+    depends_on:
+      - gasoline-gallery
+
+  gasoline-gallery:
+    container_name: gasoline-gallery
+    depends_on:
+      - gasoline-gallery-db
+    build: .
+    ports:
+      - "7070:8080"
+    volumes:
+      - ./uploads:/uploads
+    env_file:
+      .env
+
+  gasoline-gallery-db:
+    container_name: gasoline-gallery-db
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: gasoline_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d gasoline_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d
+      

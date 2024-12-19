@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Gasoline Gallery</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="post-container">
+        <div class="gallery-item">
+          <img
+            width="300"
+            height="300"
+            src="/uploads/<%= post.filename %>.jpg"
+            alt="Image is private or does not exist"
+          />
+          <% if (post.is_private) { %>
+            <form method="POST" action="/posts/<%= post.id %>/accesses">
+              <button type="submit">Request access</button>
+            </form>
+            <a href="/posts/<%= post.id %>/requests">Get post requests</a>
+          <% } %>
+        </div>
+        <div>
+          <div class="comments-section">
+            <h3>Comments section (last 5 comments)</h3>
+            <% comments.forEach(comment => { %>
+            <div class="comment">
+              <span class="comment-username"><%= comment.username %>: </span>
+              <p class="comment-content"><%- comment.text %></p>
+            </div>
+            <% }); %>
+          </div>
+          <form
+            class="comment-form"
+            method="POST"
+            action="/posts/<%- post.id %>/comments"
+          >
+            <input
+              type="text"
+              name="text"
+              placeholder="Add a comment..."
+              required
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

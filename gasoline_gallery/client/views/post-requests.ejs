@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Gasoline Gallery</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="post-container">
+        <h2>Post #<%= post_id %> requests</h2>
+        <% requests.forEach(request => { %>
+          <div class="comment">
+            <span class="comment-username">From user #<%= request.user_id %></span>
+            <div class="request-controls">
+              <form method="POST" action="/accesses/<%= request.id %>/accept">
+                <button type="submit">Grant</button>
+              </form>
+              <form method="POST" action="/accesses/<%= request.id %>/reject">
+                <button type="submit">Decline</button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>

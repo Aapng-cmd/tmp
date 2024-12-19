@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ poem.title }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0cf, #ff9800);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+            position: relative;
+        }
+        .back-link {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .back-link:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        .status {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ff9800;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            background-color: #222;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button[type="submit"] {
+            width: 100%;
+            background-color: #0cf;
+            color: #fff;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+        button[type="submit"]:hover {
+            transform: scale(1.05);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #333;
+            border: 1px solid #444;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        ul li:hover {
+            background-color: #444;
+        }
+        .comments, .grant-access {
+            margin-top: 1rem;
+        }
+        .grant-access {
+            padding: 0.25rem;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .grant-access h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .grant-access label {
+            font-size: 0.9rem;
+        }
+
+        .grant-access input[type="text"] {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: 5px;
+        }
+
+        .grant-access button[type="submit"] {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="{{ url_for('users.profile', username=session_username) }}">Back to Profile</a>
+        <h1>{{ poem.title }}</h1>
+
+        {% if not poem.isPublic and session_username == poem.author.username %}
+        <div class="grant-access">
+            <h2>Grant Access</h2>
+            <form method="POST" action="{{ url_for('poems.grant_access', poem_id=poem.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ session_csrf_token }}">
+                <input type="hidden" name="owner_username" value="{{ session_username }}">
+                <label for="grant_username">Username:</label>
+                <input type="text" name="grant_username" id="grant_username" required>
+                <button type="submit">Grant Access</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="status">Status: {{ 'Public' if poem.isPublic else 'Private' }}</div>
+
+        <p>{{ poem.content }}</p>
+
+        <div class="comments">
+            <h2>Comments</h2>
+            {% if comments %}
+                <ul>
+                {% for comment in comments %}
+                    <li>
+                        <p><strong>{{ comment.user.username if comment.user else 'Anonymous' }}:</strong> {{ comment.content }}</p>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No comments yet. Be the first to comment!</p>
+            {% endif %}
+        </div>
+
+        {% if user_has_access %}
+        <form method="POST" action="{{ url_for('poems.view_poem', poem_id=poem.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ session_csrf_token }}">
+            <label for="comment_content">Add a Comment:</label>
+            <textarea name="comment_content" id="comment_content" rows="4" required></textarea>
+            <button type="submit">Post Comment</button>
+        </form>
+        {% else %}
+        <p>You do not have permission to comment on this poem.</p>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message_text in messages %}
+                        <li class="{{ category }}">{{ message_text }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
+
+
+
+
+

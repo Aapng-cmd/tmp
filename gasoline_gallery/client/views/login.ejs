@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Gasoline Gallery</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <form class="form" method="POST" action="/login">
+        <h1>Authorization</h1>
+        <input name="username" placeholder="Username" />
+        <input name="password" placeholder="Password" />
+        <a href="/register">Create an account</a>
+        <% if (error) { %>
+          <span class="error"><%= error %></span>
+        <% } %>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </body>
+</html>

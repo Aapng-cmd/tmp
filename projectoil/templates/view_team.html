@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ team.name }} - Команда</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .team-container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #343a40;
+        }
+        .team-description {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #666666;
+        }
+        .tasks, .members {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        .tasks li, .members li {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #495057;
+        }
+        .form {
+            margin-top: 20px;
+        }
+        .form input, .form textarea {
+            width: 90%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        .form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form button:hover {
+            background-color: #0056b3;
+        }
+         .back-to-profile {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .back-to-profile:hover {
+            background-color: #45a049;
+        }
+
+        .file-upload {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .file-upload input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .file-upload button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .file-upload button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<a href="{{ url_for('users.profile', username=session['username']) }}" class="back-to-profile">Вернуться в профиль</a>
+<div class="team-container">
+    <h1>{{ team.name }}</h1>
+    <h3>Описание команды:</h3>
+    <p class="team-description">{{ team.description }}</p>
+
+    <div class="section-title">Задачи:</div>
+    <ul class="tasks">
+        {% for task in tasks %}
+            <li>{{ task.title }} - {{ task.description }}</li>
+        {% else %}
+            <li>Задач пока нет.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="form">
+        <h3>Добавить задачу</h3>
+        <form method="POST">
+            <input type="text" name="task_title" placeholder="Название задачи" required>
+            <textarea name="task_description" placeholder="Описание задачи"></textarea>
+            <button type="submit">Добавить задачу</button>
+        </form>
+    </div>
+
+    <div class="section-title">Участники</div>
+    <ul class="members">
+        {% for member in members %}
+            <li>{{ member.username }}</li>
+        {% else %}
+            <li>Нет участников.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="form">
+        <h3>Создать токен приглашения в команду</h3>
+        <form method="POST">
+            <input type="text" name="new_member_username" placeholder="Имя пользователя" required>
+            <button type="submit">Сгенерировать токен</button>
+        </form>
+    </div>
+
+    <div class="file-upload">
+        <h3>Загрузить файл</h3>
+        <br>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">Загрузить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

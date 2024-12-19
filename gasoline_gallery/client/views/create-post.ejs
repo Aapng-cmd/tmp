@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Gasoline Gallery</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <form class="form" method="POST" action="/create-post" enctype="multipart/form-data">
+        <h1>Upload post</h1>
+        <input type="file" name="image" id="image" accept="image/jpg" required>
+        <div>
+          <label for="is_private">Private post</label>
+          <input name="is_private" type="checkbox" />
+        </div>
+        <% if (error) { %>
+        <span class="error"><%= error %></span>
+        <% } %>
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+  </body>
+</html>
